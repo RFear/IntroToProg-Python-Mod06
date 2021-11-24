@@ -2,18 +2,17 @@
 # Title: Assignment 06
 # Description: Working with functions in a class,
 #              When the program starts, load each "row" of data
-#              in "ToDoList.txt" into a python Dictionary.
+#              in "ToDoFile.txt" into a python Dictionary.
 #              Add the each dictionary "row" to a python list "table"
 # ChangeLog (Who,When,What):
-# RRoot,1.1.2021,Created started script
-# RRoot,1.1.2021,Added code to complete assignment 5
-# RFear,11.17.2021,Modified code to complete assignment 6
+# RRoot,1.1.2021, Created started script
+# RRoot,1.1.2021, Added code to complete assignment 5
+# RFear,11.17.2021, Modified code to complete assignment 6
 # ---------------------------------------------------------------------------- #
 
 # Data ---------------------------------------------------------------------- #
 # Declare variables and constants
 strFileName = "ToDoFile.txt"  # The name of the data file
-objFile = None  # An object that represents a file
 dicRow = {}  # A row of data separated into elements of a dictionary {Task,Priority}
 lstTable = []  # A list that acts as a 'table' of rows
 strChoice = ""  # Captures the user option selection
@@ -31,8 +30,7 @@ class Processor:
         """ Reads data from a file into a list of dictionary rows
 
         :param file_name: (string) with name of file:
-        :param list_of_rows: (list) you want filled with file data:
-        :return: (list) of dictionary rows
+        :param list_of_rows: (list) user wants filled with file data:
         """
         list_of_rows.clear()  # clear current data
         file = open(file_name, "r")
@@ -41,21 +39,37 @@ class Processor:
             row = {"Task": task.strip(), "Priority": priority.strip()}
             list_of_rows.append(row)
         file.close()
-        return 'Success'
+        return "Success"
 
     @staticmethod
     def add_data_to_list(task, priority, list_of_rows):
-        dicRow = {"Task": task.capitalize(), "Priority": priority.capitalize()}
-        list_of_rows.append(dicRow)  # Add new data to the lstTable
+        """ Adds user input task and priority to a list
+
+        :param task: (string) name of task:
+        :param priority: (string) priority assigned to task [High, Medium, Low]:
+        :param list_of_rows: (list) you want filled with file data:
+        """
+        newRow = {"Task": task.capitalize(), "Priority": priority.capitalize()}
+        list_of_rows.append(newRow)  # Add new data to the lstTable
         return 'Success'
 
     @staticmethod
     def remove_data_from_list(opt, list_of_rows):
+        """ Removes a task and priority from a list
+
+         :param opt: (integer) user option of line item to be removed:
+         :param list_of_rows: (list) you want filled with file data:
+         """
         list_of_rows.pop(opt - 1)
         return 'Success'
 
     @staticmethod
     def write_data_to_file(file_name, list_of_rows):
+        """ Writes data from a list to a file
+
+         :param file_name: (string) with name of file:
+         :param list_of_rows: (list) you want filled with file data:
+         """
         f = open(file_name, "w")
         for row in list_of_rows:
             f.write(row["Task"] + "," + row["Priority"] + "\n")
@@ -68,7 +82,7 @@ class IO:
     """ Performs Input and Output tasks """
 
     @staticmethod
-    def print_menu_Tasks():
+    def print_menu():
         """  Display a menu of choices to the user
 
         :return: nothing
@@ -94,7 +108,7 @@ class IO:
         return choice
 
     @staticmethod
-    def print_current_Tasks_in_list(list_of_rows):
+    def print_current_tasks_in_list(list_of_rows):
         """ Shows the current Tasks in the list of dictionaries rows
 
         :param list_of_rows: (list) of rows you want to display
@@ -127,10 +141,10 @@ class IO:
     @staticmethod
     def input_new_task_and_priority():
         task = input("Enter new task: ")
-        valid = ["high", "med", "low"]  # Temporary list of valid inputs.  Used in while loop.
+        valid_priority = ["high", "med", "low"]  # Temporary list of valid inputs.  Used in while loop.
         while True:
             priority = input("Enter new task priority [High, Med, Low]: ")
-            if priority.lower() in valid:
+            if priority.lower() in valid_priority:
                 break
         return task, priority
 
@@ -152,14 +166,14 @@ class IO:
 Processor.read_data_from_file(strFileName, lstTable)  # read file data
 
 # Step 2 - Display a menu of choices to the user
-while (True):
+while True:
     # Step 3 Show current data
-    IO.print_current_Tasks_in_list(lstTable)  # Show current data in the list/table
-    IO.print_menu_Tasks()  # Shows menu
+    IO.print_current_tasks_in_list(lstTable)  # Show current data in the list/table
+    IO.print_menu()  # Shows menu
     strChoice = IO.input_menu_choice()  # Get menu option
 
     # Step 4 - Process user's menu choice
-    if strChoice.strip() == '1':
+    if strChoice == '1':
         strTask, strPriority = IO.input_new_task_and_priority()
         strStatus = Processor.add_data_to_list(strTask, strPriority, lstTable)
         IO.input_press_to_continue(strStatus)
